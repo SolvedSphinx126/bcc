@@ -1,3 +1,4 @@
 /target
 *.c
 write_a_c_compiler/
+.vscode/

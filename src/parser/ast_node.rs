@@ -21,17 +21,16 @@ pub struct Statement {
 #[derive(Debug)]
 pub struct Expression {
     // IntLiteral
-    pub value: u64
+    pub value: u64,
 }
 
 #[derive(Debug)]
 pub struct Identifier {
-    pub value: String
+    pub value: String,
 }
 
 #[derive(Debug, Clone)]
 pub struct ParserError;
-
 
 impl fmt::Display for ParserError {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {

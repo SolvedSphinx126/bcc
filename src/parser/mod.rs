@@ -1,4 +1,3 @@
-
 use std::slice::Iter;
 
 use crate::lexer::token::Token;
@@ -17,13 +16,8 @@ pub fn parse_program(tokens: &mut Iter<Token>) -> Result<Program, ParserError> {
     let mut tokens2 = tokens.clone();
     if let Ok(func) = parse_function(&mut tokens2) {
         *tokens = tokens2;
-        Ok(
-            Program {
-                fns: func,
-            }
-        )
-    }
-    else {
+        Ok(Program { fns: func })
+    } else {
         Err(ParserError)
     }
 }
@@ -45,28 +39,21 @@ pub fn parse_function(tokens: &mut Iter<Token>) -> Result<Function, ParserError>
             return Err(ParserError);
         }
         if let Ok(statement) = parse_statement(&mut tokens2) {
-            
             if tokens2.next() != Some(&Token::CloseBrace) {
                 Err(ParserError)
-            }
-            else {
+            } else {
                 *tokens = tokens2;
-                Ok(
-                    Function {
-                        name,
-                        statements: statement
-                    }
-                )
+                Ok(Function {
+                    name,
+                    statements: statement,
+                })
             }
         } else {
             Err(ParserError)
         }
-
-    }
-    else {
+    } else {
         Err(ParserError)
     }
-
 }
 
 // <identifier> ::= Identifier
@@ -75,7 +62,7 @@ pub fn parse_identifier(tokens: &mut Iter<Token>) -> Result<Identifier, ParserEr
     if let Some(Token::Identifier(val)) = tokens2.next() {
         *tokens = tokens2;
         Ok(Identifier {
-            value: *val.clone()
+            value: *val.clone(),
         })
     } else {
         Err(ParserError)
@@ -91,8 +78,7 @@ pub fn parse_statement(tokens: &mut Iter<Token>) -> Result<Statement, ParserErro
     if let Ok(exp) = parse_expression(&mut tokens2) {
         if tokens2.next() != Some(&Token::Semicolon) {
             Err(ParserError)
-        }
-        else {
+        } else {
             *tokens = tokens2;
             Ok(Statement { result: exp })
         }
@@ -105,11 +91,9 @@ pub fn parse_statement(tokens: &mut Iter<Token>) -> Result<Statement, ParserErro
 pub fn parse_expression(tokens: &mut Iter<Token>) -> Result<Expression, ParserError> {
     let mut tokens2 = tokens.clone();
     if let Some(Token::IntLiteral(num)) = tokens2.next() {
-        *tokens = tokens2; 
-        Ok(Expression {value: *num})
-    }
-    else {
+        *tokens = tokens2;
+        Ok(Expression { value: *num })
+    } else {
         Err(ParserError)
     }
 }
-
