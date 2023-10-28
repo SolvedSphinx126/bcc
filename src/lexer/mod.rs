@@ -58,7 +58,6 @@ fn get_token(str: &str) -> Token {
         } else if res[11].is_match(str) {
             return LogicalNegation;
         }
-
     }
 
     panic!("Token wasn't found");

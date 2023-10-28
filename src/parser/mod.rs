@@ -90,9 +90,37 @@ pub fn parse_statement(tokens: &mut Iter<Token>) -> Result<Statement, ParserErro
 // <expression> ::= IntLiteral
 pub fn parse_expression(tokens: &mut Iter<Token>) -> Result<Expression, ParserError> {
     let mut tokens2 = tokens.clone();
-    if let Some(Token::IntLiteral(num)) = tokens2.next() {
+    let tok = tokens2.next();
+    if let Some(Token::IntLiteral(num)) = tok {
         *tokens = tokens2;
-        Ok(Expression { value: *num })
+        Ok(Expression::Constant(Constant { value: *num }))
+    } else if let Some(Token::Negation) = tok {
+        if let Ok(exp) = parse_expression(&mut tokens2) {
+            *tokens = tokens2;
+            Ok(Expression::UnaryOp(Operator::Negation, Box::new(exp)))
+        } else {
+            Err(ParserError)
+        }
+    } else if let Some(Token::BitwiseComplement) = tok {
+        if let Ok(exp) = parse_expression(&mut tokens2) {
+            *tokens = tokens2;
+            Ok(Expression::UnaryOp(
+                Operator::BitwiseComplement,
+                Box::new(exp),
+            ))
+        } else {
+            Err(ParserError)
+        }
+    } else if let Some(Token::LogicalNegation) = tok {
+        if let Ok(exp) = parse_expression(&mut tokens2) {
+            *tokens = tokens2;
+            Ok(Expression::UnaryOp(
+                Operator::LogicalNegation,
+                Box::new(exp),
+            ))
+        } else {
+            Err(ParserError)
+        }
     } else {
         Err(ParserError)
     }

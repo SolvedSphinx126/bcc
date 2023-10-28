@@ -21,6 +21,10 @@ fn generate_statement(stmt: Statement) -> Vec<String> {
 
 fn generate_expression(exp: Expression) -> Vec<String> {
     let mut lines: Vec<String> = vec![];
-    lines.push(format!("  mov ${}, %rax", exp.value));
+    if let Expression::Constant(Constant { value: num }) = exp {
+        lines.push(format!("  mov ${}, %rax", num));
+    } else {
+        todo!();
+    }
     lines
 }

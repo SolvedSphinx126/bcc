@@ -19,9 +19,22 @@ pub struct Statement {
 }
 
 #[derive(Debug)]
-pub struct Expression {
-    // IntLiteral
+pub enum Expression {
+    // Constant | UnaryOp
+    Constant(Constant),
+    UnaryOp(Operator, Box<Expression>),
+}
+
+#[derive(Debug)]
+pub struct Constant {
     pub value: u64,
+}
+
+#[derive(Debug)]
+pub enum Operator {
+    Negation,
+    BitwiseComplement,
+    LogicalNegation,
 }
 
 #[derive(Debug)]
