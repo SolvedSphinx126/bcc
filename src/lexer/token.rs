@@ -9,4 +9,7 @@ pub enum Token {
     ReturnKeyword,
     Identifier(Box<String>),
     IntLiteral(u64),
+    Negation,
+    BitwiseComplement,
+    LogicalNegation,
 }

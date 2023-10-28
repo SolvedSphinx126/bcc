@@ -5,7 +5,7 @@ pub mod token;
 use self::token::Token;
 
 pub fn lex(mut src: File) -> Vec<Token> {
-    let token_regex = r"\{|}|\(|\)|;|int|return|[a-zA-Z]\w*|[0-9]+";
+    let token_regex = r"\{|}|\(|\)|;|int|return|[a-zA-Z]\w*|[0-9]+|-|~|!";
     let token_regex = Regex::new(token_regex).unwrap();
     let mut buf = String::new();
     src.read_to_string(&mut buf).unwrap();
@@ -27,6 +27,9 @@ fn get_token(str: &str) -> Token {
         Regex::new(r"^return$").unwrap(),
         Regex::new(r"^[a-zA-Z]\w*$").unwrap(),
         Regex::new(r"^[0-9]+$").unwrap(),
+        Regex::new(r"^-$").unwrap(),
+        Regex::new(r"^~$").unwrap(),
+        Regex::new(r"^!$").unwrap(),
     ];
     {
         use token::Token::*;
@@ -48,7 +51,14 @@ fn get_token(str: &str) -> Token {
             return Identifier(Box::new(str.to_owned()));
         } else if res[8].is_match(str) {
             return IntLiteral(str.parse::<u64>().expect("cant parse int literal"));
+        } else if res[9].is_match(str) {
+            return Negation;
+        } else if res[10].is_match(str) {
+            return BitwiseComplement;
+        } else if res[11].is_match(str) {
+            return LogicalNegation;
         }
+
     }
 
     panic!("Token wasn't found");
