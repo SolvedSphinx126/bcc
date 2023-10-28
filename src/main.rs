@@ -24,8 +24,10 @@ fn main() {
     let output_exe = &basename.to_str().unwrap();
 
     let tokens = lex(input_src);
+    dbg!(&tokens);
 
     let pgrm = parse(tokens).unwrap();
+    dbg!(&pgrm);
 
     let mut asm = generate(pgrm);
 
@@ -50,5 +52,6 @@ fn main() {
     let mut path = env::args().next().unwrap();
     path.push('/');
     assemble_command.current_dir(std::env::current_dir().unwrap());
-    let _res = assemble_command.output().expect("Assembly failed");
+    let res = assemble_command.output().expect("Assembly failed");
+    //dbg!(res);
 }
