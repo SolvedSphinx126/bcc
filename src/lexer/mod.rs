@@ -1,8 +1,9 @@
 use regex::Regex;
 use std::{fs::File, io::Read};
 
-use self::token::Token;
 pub mod token;
+use self::token::Token;
+
 
 pub fn lex(mut src: File) -> Vec<Token> {
     let token_regex = r"\{|}|\(|\)|;|int|return|[a-zA-Z]\w*|[0-9]+";
@@ -16,7 +17,7 @@ pub fn lex(mut src: File) -> Vec<Token> {
         .collect()
 }
 
-fn get_token(str: &String) -> Token {
+fn get_token(str: &str) -> Token {
     let res = [
         Regex::new(r"^\{$").unwrap(),
         Regex::new(r"^}$").unwrap(),
@@ -52,7 +53,7 @@ fn get_token(str: &String) -> Token {
             return ReturnKeyword;
         }
         else if res[7].is_match(str) {
-            return Identifier(Box::new(str.clone()));
+            return Identifier(Box::new(str.to_owned()));
         }
         else if res[8].is_match(str) {
             return IntLiteral(str.parse::<u64>().expect("cant parse int literal"));
